@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <protocol>
+        <request name="tail" desc="tail" id="301" size="4k">
+            <key name="file" type="varchar" desc="文件名"/>
+        </request>
+    </protocol>
+</root>

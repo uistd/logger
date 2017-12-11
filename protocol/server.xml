@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <protocol>
+        <request name="write_log" desc="写日志" id="100" size="4k">
+            <key name="file" type="varchar" desc="日志文件"/>
+            <key name="content" type="varchar" desc="内容"/>
+        </request>
+    </protocol>
+</root>

@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
-project(im)
-add_definitions( -g -DYILE_DEBUG -DPROTOCOL_DEBUG )
+project(server)
+add_definitions(-g)
 set(SOURCE_FILES
-        server.c server.h
+        server.c server.h common.h
         protocol/proto.c protocol/proto.h
-        protocol/proto_action_dispatch.c protocol/proto_action_dispatch.h)
+        protocol/proto_action_dispatch.c protocol/proto_action_dispatch.h logger.c logger.h log.c log.h map.c map.h work.c work.h action.c action.h)
 INCLUDE_DIRECTORIES(
         yile
         yile/yile_log/include
@@ -31,4 +31,4 @@ LINK_LIBRARIES(
         yileprotocol_debug
         yilenet_debug
 )
-add_executable(im ${SOURCE_FILES})
+add_executable(server ${SOURCE_FILES})

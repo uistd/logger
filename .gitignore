@@ -1,2 +1,6 @@
 .idea
 server/cmake-build-debug
+.fuse_hidden*
+server/CMakeFiles/server.dir
+server/CMakeFiles
+CMakeCache.txt

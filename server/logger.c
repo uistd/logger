@@ -222,7 +222,7 @@ void write_log(const char *file_name, const char *content, size_t length) {
 void logger_idle_check(const char *key, size_t key_len, void *tmp) {
     uis_logger_t *logger = (uis_logger_t *) tmp;
     time_t now_time = time(0);
-    if (now_time - logger->active_time) {
+    if (now_time - logger->active_time > uis_max_idle_time) {
         log_debug("Close idle logger: %s", logger->file_name);
         //从map中移除
         map_unset(&logger_map, key, key_len);

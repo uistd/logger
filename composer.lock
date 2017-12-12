@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "450621dfcdb2c4586dd1a711b62a9223",
+    "content-hash": "ea5b850bb522321d79718680c226b1c4",
     "packages": [
         {
             "name": "ffan/std-common",
-            "version": "v2.x-dev",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "http://gitlab.ffan.biz/php/ffan-utils.git",
-                "reference": "3c61198d7afd026abb504018d6ddc02ecb4952cf"
+                "reference": "822b5211a14f039929d351e3baadc9a3f12507ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://composer.intra.ffan.com/repo/private/dists/ffan/std-common/2.9999999.9999999.9999999-dev/3c61198d7afd026abb504018d6ddc02ecb4952cf.zip",
-                "reference": "3c61198d7afd026abb504018d6ddc02ecb4952cf",
+                "url": "http://composer.intra.ffan.com/repo/private/dists/ffan/std-common/2.0.10.0/822b5211a14f039929d351e3baadc9a3f12507ca.zip",
+                "reference": "822b5211a14f039929d351e3baadc9a3f12507ca",
                 "shasum": null,
                 "mirrors": [
                     {
@@ -55,20 +55,20 @@
                 "php",
                 "utils"
             ],
-            "time": "2017-12-05 09:10:45"
+            "time": "2017-12-05T09:10:45+00:00"
         },
         {
             "name": "ffan/std-event",
-            "version": "v2.x-dev",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "http://gitlab.ffan.biz/php/ffan-event.git",
-                "reference": "9bb3928eb7f24eff615bf5d7014d99e858a1b3d3"
+                "reference": "dc029740332cc8b4995a252abe2dd75f608bfd85"
             },
             "dist": {
                 "type": "zip",
-                "url": "http://composer.intra.ffan.com/repo/private/dists/ffan/std-event/2.9999999.9999999.9999999-dev/9bb3928eb7f24eff615bf5d7014d99e858a1b3d3.zip",
-                "reference": "9bb3928eb7f24eff615bf5d7014d99e858a1b3d3",
+                "url": "http://composer.intra.ffan.com/repo/private/dists/ffan/std-event/2.0.3.0/dc029740332cc8b4995a252abe2dd75f608bfd85.zip",
+                "reference": "dc029740332cc8b4995a252abe2dd75f608bfd85",
                 "shasum": null,
                 "mirrors": [
                     {
@@ -105,7 +105,7 @@
                 "ffan",
                 "std"
             ],
-            "time": "2017-11-23 05:50:52"
+            "time": "2017-11-23T05:50:52+00:00"
         },
         {
             "name": "ffan/std-logger",
@@ -161,7 +161,7 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,

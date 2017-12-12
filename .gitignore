@@ -5,3 +5,4 @@ server/CMakeFiles/server.dir
 server/CMakeFiles
 CMakeCache.txt
 server/Makefile
+server/cmake_install.cmake

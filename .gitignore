@@ -4,3 +4,4 @@ server/cmake-build-debug
 server/CMakeFiles/server.dir
 server/CMakeFiles
 CMakeCache.txt
+server/Makefile

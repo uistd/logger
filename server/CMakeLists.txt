@@ -31,4 +31,4 @@ LINK_LIBRARIES(
         yileprotocol_debug
         yilenet_debug
 )
-add_executable(server ${SOURCE_FILES})
+add_executable(uis_log_server ${SOURCE_FILES})

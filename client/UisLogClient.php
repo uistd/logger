@@ -2,7 +2,11 @@
 
 namespace FFan\Uis\Log;
 
+use FFan\Std\Common\Config;
+use FFan\Std\Common\InvalidConfigException;
 use FFan\Std\Common\Utils;
+use FFan\Std\Event\EventManager;
+use FFan\Std\Logger\FileLogger;
 use FFan\Std\Logger\LoggerBase;
 use FFan\Std\Logger\LogHelper;
 use FFan\Std\Logger\LogLevel;
@@ -74,6 +78,11 @@ class UisLogClient extends LoggerBase
     private $is_write_buffer;
 
     /**
+     * @var resource
+     */
+    private $fd_handler;
+
+    /**
      * UisLogClient constructor.
      * @param string $path 目录
      * @param string $file_name 文件名
@@ -94,6 +103,23 @@ class UisLogClient extends LoggerBase
             $option |= self::OPT_WRITE_BUFFER;
         }
         $this->setOption($option);
+        EventManager::instance()->attach(EventManager::SHUTDOWN_EVENT, [$this, 'saveLog']);
+    }
+
+    /**
+     * 保存日志
+     */
+    public function saveLog()
+    {
+        if (empty($this->msg_buffer)) {
+            return;
+        }
+        $fd_handler = $this->getLogHandler();
+        if (null !== $fd_handler) {
+            fwrite($fd_handler, join($this->break_flag, $this->msg_buffer) . $this->break_flag);
+        }
+        //已经保存日志了, write_buffer 就不能再是true了
+        $this->is_write_buffer = false;
     }
 
     /**
@@ -120,7 +146,6 @@ class UisLogClient extends LoggerBase
     {
         $opt = $this->current_opt;
         $this->is_write_buffer = ($opt & self::OPT_WRITE_BUFFER) > 0;
-        $this->split_name = null;
         if (($opt & self::OPT_BREAK_EACH_REQUEST) > 0) {
             $this->break_flag = ' | ';
         } else {
@@ -129,12 +154,45 @@ class UisLogClient extends LoggerBase
     }
 
     /**
+     * 获取连接
      * @return resource
+     * @throws InvalidConfigException
      */
     private function getLogHandler()
     {
-
+        if (null !== $this->fd_handler) {
+            return $this->fd_handler;
+        }
+        $config = Config::get('uis_log_server');
+        if (!isset($config['host'])) {
+            throw new InvalidConfigException('CONFIG `uis_log_server` required');
+        }
+        $host = $config['host'];
+        $port = isset($config['port']) ? $config['port'] : 10666;
+        $opt = STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT;
+        $this->fd_handler = stream_socket_client('tcp://' . $host . ':' . $port, $err_no, $err_msg, 1, $opt);
+        //如果无法连接服务器, 设置系统不可用
+        if (!$this->fd_handler) {
+            $this->setDisable();
+            LogHelper::getLogRouter()->error($err_msg . '(' . $err_no . ')');
+            return null;
+        }
+        //设置为非阻塞模式
+        stream_set_blocking($this->fd_handler, false);
+        return $this->fd_handler;
     }
+
+    /**
+     * 设置不可用
+     */
+    private function setDisable()
+    {
+        //将自己从LogRouter中移除
+        $this->remove();
+        //重新开启文件日志
+        new FileLogger('logs', $this->file_name);
+    }
+
 
     /**
      * 收到日志
@@ -146,9 +204,8 @@ class UisLogClient extends LoggerBase
         if (!($this->log_level & $log_level)) {
             return;
         }
-        $file_handle = $this->getLogHandler();
-        if (null === $file_handle) {
-            $this->is_disable = true;
+        $fd_handler = $this->getLogHandler();
+        if (null === $fd_handler) {
             return;
         }
         //前面增加的内容
@@ -179,9 +236,9 @@ class UisLogClient extends LoggerBase
         if ($this->is_write_buffer) {
             $this->msg_buffer[] = $content;
         } else {
-            $write_len = fwrite($file_handle, $content . $this->break_flag);
+            $write_len = fwrite($fd_handler, $content . $this->break_flag);
             if (false === $write_len) {
-                $this->is_disable = true;
+                $this->setDisable();
             }
         }
     }

@@ -1,0 +1,61 @@
+#! /bin/sh
+
+bin_name="uis_log_server"
+bin_path="/var/wd/wrs/webroot/uis_log/bin/"
+conf_name="/var/wd/wrs/webroot/uis_log/config/config.ini"
+
+set -e
+
+start_daemon() {
+    cd ${bin_path}
+    pscount=`ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
+    if [ "$pscount" = "1" ]; then
+        echo "running."
+        exit 0;
+    fi
+    echo -n "Starting $bin_name: \n"
+    ${bin_path}${bin_name} -c ${conf_name} >> /var/wd/ui_service/server_`date +%Y-%m-%d`.log -d
+    sleep 0.5
+    pscount=`ps -ef|grep "$bin_path"|grep -v grep|grep -v $0|wc -l`
+        if [ "$pscount" = "0" ]; then 
+                echo "failed."
+        else
+        echo "done."
+        fi
+}
+
+stop_daemon() {
+    echo -n "Stopping $bin_name: \n"
+    pscount=`ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
+    if [ "$pscount" = "0" ]; then
+        echo "no running.\n"
+    else
+	kill `ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|awk '{print $2}'`
+                sleep 0.5
+                pscount=`ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
+            if [ "$pscount" = "0" ]; then
+				echo "done."
+            else
+				echo "failed."
+            fi
+    fi
+}
+
+case "$1" in
+  start)
+    start_daemon
+    ;;
+  stop)
+    stop_daemon
+    ;;
+  restart)
+    stop_daemon
+    start_daemon
+    ;;
+  *)
+    echo "Usage: {start|stop|restart}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

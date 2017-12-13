@@ -12,7 +12,7 @@
  * @param read_buf
  * @return
  */
-int action_dispatch(yile_connection_t *fd_info, yile_buf_t *read_buf) {
+int action_dispatch(yile_connection_t *fd_info, yile_buf_t *read_buf, uint32_t hash_id) {
     return proto_action_dispatch(fd_info, read_buf);
 }
 

@@ -24,6 +24,7 @@ int proto_action_dispatch(yile_connection_t *fd_info, yile_buf_t *read_buf) {
             }
             proto_write_log_t *req_pack = read_write_log(read_buf, &proto_result);
             if (NULL == req_pack) {
+                log_debug("protocol unpack error");
                 try_free_proto_pool(proto_result);
                 yile_connection_close(fd_info);
                 return YILE_ERROR;

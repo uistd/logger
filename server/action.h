@@ -25,7 +25,7 @@ extern char DEFAULT_RESPONSE_BUF[DEFAULT_RESPONSE_BUF_SIZE];
  * @param read_buf
  * @return
  */
-int action_dispatch(yile_connection_t *fd_info, yile_buf_t *read_buf);
+int action_dispatch(yile_connection_t *fd_info, yile_buf_t *read_buf, uint32_t hash_id);
 
 /**
  * 发送数据

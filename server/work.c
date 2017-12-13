@@ -6,12 +6,29 @@
 #include "action.h"
 #include "logger.h"
 
+//记录日志的最大size
+#define MAX_CONTENT_SIZE 1024 * 1024 * 4
+
 /**
  * 数据到达
  */
 static int work_server_request(yile_connection_t *fd_info) {
+
     log_debug("Log server on data:%d", fd_info->fd);
-    return action_dispatch(fd_info, fd_info->read_buf);
+    int re = yile_connection_request_parse(fd_info, action_dispatch);
+    if ( YILE_OK != re )
+    {
+        packet_head_t *tmp_head = yile_connection_uncomplete_data();
+        log_debug("Undo tmp_head:%d", tmp_head->size);
+        //如果数据超过最大值
+        if ( tmp_head->size > MAX_CONTENT_SIZE )
+        {
+            log_error("max content");
+            yile_connection_close( fd_info );
+            return YILE_ERROR;
+        }
+    }
+    return re;
 }
 
 /**

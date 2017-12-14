@@ -163,11 +163,11 @@ int logger_file_check(uis_logger_t *logger) {
         char hour[5];
         snprintf(hour, sizeof(hour) - 1, "%02d", t->tm_hour);
         snprintf(file_name_pool, LOG_PATH_BUFF, "%s.%s%s.log", logger->file_name, date_str, hour);
-        if (YILE_OK != uis_log_create_dir(file_name_pool)) {
-            return YILE_ERROR;
-        }
     } else {
         snprintf(file_name_pool, LOG_PATH_BUFF, "%s.%s.log", logger->file_name, date_str);
+    }
+    if (YILE_OK != uis_log_create_dir(file_name_pool)) {
+        return YILE_ERROR;
     }
     logger->split_time = uis_next_split_time(now_time);
     logger->file_handle = fopen(file_name_pool, "a+");

@@ -1,42 +1,40 @@
 #! /bin/sh
 
 bin_name="uis_log_server"
-bin_path="/var/wd/wrs/webroot/uis_log/bin/"
-conf_name="/var/wd/wrs/webroot/uis_log/config/config.ini"
-
-set -e
+bin_path=$(cd `dirname $0`; pwd)
+conf_name="$bin_path/../config/config.ini"
 
 start_daemon() {
     cd ${bin_path}
-    pscount=`ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
+    pscount=`ps -ef|grep "$bin_path/$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
     if [ "$pscount" = "1" ]; then
         echo "running."
         exit 0;
     fi
-    echo -n "Starting $bin_name: \n"
-    ${bin_path}${bin_name} -c ${conf_name} >> /var/wd/ui_service/server_`date +%Y-%m-%d`.log -d
+    echo "Starting $bin_name: \n"
+    ${bin_path}/${bin_name} -c ${conf_name} -d
     sleep 0.5
-    pscount=`ps -ef|grep "$bin_path"|grep -v grep|grep -v $0|wc -l`
+    pscount=`ps -ef|grep "$bin_path/$bin_name"|grep -v grep|grep -v $0|wc -l`
         if [ "$pscount" = "0" ]; then 
-                echo "failed."
+            echo "failed.\n"
         else
-        echo "done."
+            echo "done.\n"
         fi
 }
 
 stop_daemon() {
-    echo -n "Stopping $bin_name: \n"
-    pscount=`ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
+    echo "Stopping $bin_name: \n"
+    pscount=`ps -ef|grep "$bin_path/$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
     if [ "$pscount" = "0" ]; then
-        echo "no running.\n"
+        echo "not running.\n"
     else
-	kill `ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|awk '{print $2}'`
+	kill `ps -ef|grep "$bin_path/$bin_name -c $conf_name"|grep -v grep|awk '{print $2}'`
                 sleep 0.5
-                pscount=`ps -ef|grep "$bin_path$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
+                pscount=`ps -ef|grep "$bin_path/$bin_name -c $conf_name"|grep -v grep|grep -v $0|wc -l`
             if [ "$pscount" = "0" ]; then
-				echo "done."
+				echo "done.\n"
             else
-				echo "failed."
+				echo "failed.\n"
             fi
     fi
 }

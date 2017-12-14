@@ -70,8 +70,12 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "main() Write pid to file error\n");
         return -1;
     }
+    //日志分割方式 1: 按小时 2: 按天
+    int split_type = yile_ini_get_int(section, "split_type", 2, &ini_obj);
+
+    //关闭空闲日志文件的时间
     int log_idle_time = yile_ini_get_int(section, "close_idle_file", 3600, &ini_obj);
-    init_logger(log_path, 1, log_idle_time);
+    init_logger(log_path, split_type, log_idle_time);
 
     //epoll初始化
     if (YILE_OK != work_main_event_set()) {

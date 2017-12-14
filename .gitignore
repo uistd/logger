@@ -8,3 +8,4 @@ server/Makefile
 server/cmake_install.cmake
 vendor
 server.cbp
+uis_log_server
